@@ -1,0 +1,48 @@
+function [Fx,Fy,Fz,M] = fcn(f,r,c)
+
+
+Fx = 0;
+Fy = 0;
+Fz = 0;
+M = [0 0 0];
+
+Fc = f/(r*c);
+
+angulo_max = pi/18;
+
+l = 10;
+a = 10;
+
+v = l/r;
+h = a/c;
+
+for i = r
+    for j = c
+    angulo_c = -angulo_max + (2*angulo_max) * rand(1);
+    angulo_c2 = -angulo_max + (2*angulo_max) * rand(1);
+    
+    ef = (0.442-0.28)*rand(1) + 0.28;
+    I = ((1.575*10^(-4))-(1.425*10^(-4)))*rand(1) + 1.425*10^(-4);
+    
+    Fr = Fc + sqrt(ef)*I*sqrt(2*970*(1/76));
+    
+    Fic = Fr * cos(angulo_c2);
+    Fzc = Fr * sin(angulo_c2);
+    Fxc = Fic * cos(angulo_c);
+    Fyc = Fic * sin(angulo_c);
+    
+    Fx = Fx + Fxc;
+    Fy = Fy + Fyc;
+    Fz = Fz + Fzc;
+    
+    Dx = l/2 - (h/2)*(2*j-1);
+    Dz = a/2 - (v/2)*(2*j-1);
+    
+    Fc_t = [Fxc Fyc Fzc];
+    D = [Dx 0 Dz];
+    
+    Mi = cross(Fc_t,D);
+    
+    M = M + Mi;
+    end
+end
